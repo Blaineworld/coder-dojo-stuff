@@ -1,4 +1,4 @@
-' WARNING: If you run this with WScript, you'll be completely
+' WARNING: If you run this with WScript, you'll be completely unable
 ' to terminate it without using Task Manager until it runs out of memory.
 
 ' Due to this, you should use CScript instead.
