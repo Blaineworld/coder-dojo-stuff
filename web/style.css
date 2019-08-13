@@ -1,0 +1,11 @@
+﻿body {
+	font: 16pt sans-serif;
+}
+
+.blush::before, .blush::after {
+	color: salmon;
+	content: "≈";
+	font-size: 0.75em;
+	font-weight: lighter;
+	vertical-align: middle;
+}

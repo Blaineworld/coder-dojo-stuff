@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width" />
+		<meta name="parallax-layers" content="12.5 25 125 0" />
+		<title>Parallax Background</title>
+		<link rel="stylesheet" href="../style.css" />
+		<style>
+:root {
+	/* My parallax script uses the root element by default. */;
+	background-color: skyBlue;
+	/* Nice. */
+	background-image:
+		radial-gradient(ellipse at center, transparent 69%, darkSlateGray calc(69% + 1px)), /* you're in a cave */
+		radial-gradient(circle at top, transparent 69%, seaGreen calc(69% + 1px)), /* distant mountains */
+		radial-gradient(circle at top, transparent 65%, steelBlue calc(65% + 1px)), /* more distanter mountains */
+		radial-gradient(circle at 15% 15%, yellow 12.5%, transparent 15%); /* big star boi */
+	background-size: 75vw 100vh, 25vw 100vh, 20vw calc(100vh - 2.5%), 100vw 100vh;
+	overflow-y: hidden;
+}
+
+body {
+	color: white;
+	margin: 0 1ch;
+	height: 100vh;
+	text-shadow: 1pt 1pt #000000c0;
+}
+		</style>
+	</head>
+	<body>
+		<h1>This is a heading.</h1>
+		<big>This is a paragraph.</big>
+		<hr style="width:5000vw;position:relative">
+			<small style="position:absolute;right:-4900vw">Oh hey it's just me... <span class="blush">UwO</span></small></hr>
+		<p>That sure is a long &lt;hr&gt;...</p>
+		<small>How about you go see what's at the other end?</small>
+		<script src="parallax.min.js"></script>
+		<script>
+'use strict';
+
+addEventListener("scroll", () => parallax(), { "passive": true });
+		</script>
+	</body>
+</html>
