@@ -1,7 +1,7 @@
 'use strict';
 
 const MinecraftUI = (function() {
-	document.head.insertBefore(document.createElement("STYLE"), document.head.querySelector("style")).innerHTML = ":root{--mcui-pixel:1px}.mcui{background-size:calc(16*var(--mcui-pixel));display:inline-block;image-rendering:-moz-crisp-edges;image-rendering:-webkit-crisp-edges;image-rendering:pixelated;image-rendering:crisp-edges;margin:0;padding:0}.mcui-pressure-plate{background-color:silver;background-position:calc(var(--mcui-pixel)*-1) calc(var(--mcui-pixel)*-1);margin:var(--mcui-pixel);width:calc(var(--mcui-pixel)*14);height:calc(var(--mcui-pixel)*14)}.mcui-pressure-plate.mcui-active,.mcui-button.mcui-active{box-shadow: 0 0 calc(var(--mcui-pixel)*2) black inset}.mcui-button{background-color:silver;width:calc(var(--mcui-pixel)*1);height:calc(var(--mcui-pixel)*1)}";
+	document.head.insertBefore(document.createElement("STYLE"), document.head.querySelector("style")).innerHTML = ":root{--mcui-pixel:1px}.mcui{background-size:calc(16*var(--mcui-pixel));display:inline-block;image-rendering:-moz-crisp-edges;image-rendering:-webkit-crisp-edges;image-rendering:pixelated;image-rendering:crisp-edges;margin:0;padding:0}.mcui-pressure-plate{background-color:silver;background-position:calc(var(--mcui-pixel)*-1) calc(var(--mcui-pixel)*-1);margin:var(--mcui-pixel);width:calc(var(--mcui-pixel)*14);height:calc(var(--mcui-pixel)*14)}.mcui-pressure-plate.mcui-active,.mcui-button.mcui-active{box-shadow: 0 0 calc(var(--mcui-pixel)*2) black inset}.mcui-button{background-color:silver;background-position:calc(var(--mcui-pixel)*-5) calc(var(--mcui-pixel)*-6);margin:calc(var(--mcui-pixel)*6) calc(var(--mcui-pixel)*5);width:calc(var(--mcui-pixel)*6);height:calc(var(--mcui-pixel)*4)}";
 
 	const passive = { "passive": true };
 
