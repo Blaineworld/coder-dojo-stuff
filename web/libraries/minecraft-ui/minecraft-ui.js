@@ -27,42 +27,42 @@ const MinecraftUI = (function() {
 		"SPRUCE": "spruce_planks"
 	};
 
-	function play(sound, volume, pitch) {
+	function play(sound = "null", volume = 1.0, pitch = 1.0) {
 		// Play a sound.
 	}
 
 	function deactivateElement(E) {
+		// Make an element not active anymore.
 		E.className = E.className.replace("mcui-active", "");
 	}
 
 	function buttonMouseDown() {
+		// When you click on a button.
 		clearTimeout(this.deactivateTimeout);
-		if (!(" " + this.className + " ").includes(" mcui-active ")) {
+		if (!(" " + this.className + " ").includes(" mcui-active "))
 			this.className += " mcui-active";
-			play("random.click");
-		}
 	}
 
 	function buttonMouseEnter(event) {
+		// When your cursor enters a button.
 		clearTimeout(this.deactivateTimeout);
 		if (event.buttons)
-			if ((" " + this.className + " ").includes(" mcui-active ")) {
+			if ((" " + this.className + " ").includes(" mcui-active "))
 				this.className += " mcui-active";
-				play("random.click");
-			}
 	}
 
 	function buttonMouseUp() {
+		// When you unclick on a button.
 		if ((" " + this.className + " ").includes(" mcui-active ")) {
 			clearTimeout(this.deactivateTimeout);
 			this.deactivateTimeout = setTimeout(deactivateElement, 1000, this);
-			play("random.click");
 		}
 	}
 
 	Object.defineProperties(x, {
 		"createButton": {
 			"value": function CREATE_BUTTON(type = "STONE", container) {
+				// Create an HTML Minecraft button.
 				const v = String(type).toUpperCase();
 				if (!(v in buttonTypes))
 					throw Error("Unknown button variant: " + v);
@@ -80,6 +80,7 @@ const MinecraftUI = (function() {
 		},
 		"createPressurePlate": {
 			"value": function CREATE_PRESSURE_PLATE(type = "STONE", container) {
+				// Create an HTML Minecraft pressure plate.
 				const v = String(type).toUpperCase();
 				if (!(v in buttonTypes))
 					throw Error("Unknown pressure plate variant: " + v);
