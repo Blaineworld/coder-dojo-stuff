@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width" />
+		<title>MinecraftUI Demo</title>
+		<style>
+:root {
+	--mcui-pixel: 3px;
+}
+		</style>
+	</head>
+	<body>
+		<h1>MinecraftUI Demo</h1>
+		<p>MinecraftUI brings the world of Minecraft to your browser! It's a Javascript library that allows you to use Minecraft blocks in your own webpage. Does it cause problems for mobile users? Absolutely! But really, who cares? :)</p>
+		<script src="minecraft-ui.js"></script>
+		<script>
+MinecraftUI.createPressurePlate("stone", document.body);
+MinecraftUI.createButton("stone", document.body);
+		</script>
+	</body>
+</html>
