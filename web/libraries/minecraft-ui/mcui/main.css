@@ -1,0 +1,95 @@
+/*
+	MinecraftUI Main Stylesheet
+
+	by Blaineworld
+*/
+
+:root{
+	--mcui-pixel: 1px;
+
+	--mcui-shadow: #000104;
+}
+
+.mcui {
+
+	background-size: calc(16 * var(--mcui-pixel));
+
+	display: inline-block;
+
+	image-rendering: -moz-crisp-edges;
+	image-rendering: -webkit-crisp-edges;
+	image-rendering: pixelated;
+	image-rendering: crisp-edges;
+
+	margin: 0;
+	padding: 0;
+
+	vertical-align: text-top;
+
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.mcui-button {
+	background-color: silver;
+	background-position: calc(-5 * var(--mcui-pixel)) calc(-6 * var(--mcui-pixel));
+
+	margin: calc(6 * var(--mcui-pixel)) calc(5 * var(--mcui-pixel));
+	height: calc(4 * var(--mcui-pixel));
+	width: calc(6 * var(--mcui-pixel));
+}
+
+.mcui-pressure-plate {
+	background-color: silver;
+	background-position: calc(var(--mcui-pixel) * -1) calc(var(--mcui-pixel) * -1);
+
+	margin: var(--mcui-pixel);
+	height: calc(var(--mcui-pixel) * 14);
+	width: calc(var(--mcui-pixel) * 14);
+}
+
+.mcui-pressure-plate::after, .mcui-button::after {
+	content: ' ';
+
+	display: none;
+	height: 100%;
+	width: 100%;
+}
+
+.mcui-pressure-plate.mcui-active::after, .mcui-button.mcui-active::after {
+	background: var(--mcui-shadow);
+
+	display: block;
+
+	opacity: 0.5;
+}
+
+.mcui-wall-sign {
+	background-size: calc(16 * var(--mcui-pixel)) calc(8 * var(--mcui-pixel));
+
+	font-family: sans-serif;
+	font-size: calc(2 * var(--mcui-pixel));
+	line-height: calc(2 * var(--mcui-pixel));
+	text-align: center;
+
+	margin: calc(4 * var(--mcui-pixel)) 0;
+	height: calc(8 * var(--mcui-pixel));
+	width: calc(16 * var(--mcui-pixel));
+
+	outline: none;
+
+	overflow-x: hidden;
+	overflow-y: hidden;
+
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	-ms-user-select: text;
+	user-select: text;
+}
+
+.mcui-wall-sign::selection {
+	background: #0000ff;
+	color: white;
+}

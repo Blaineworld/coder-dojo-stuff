@@ -1,0 +1,17 @@
+/*
+	MinecraftUI Fancy Graphics Stylesheet
+
+	by Blaineworld
+*/
+
+.mcui-pressure-plate.mcui-active, .mcui-button.mcui-active {
+	box-shadow: 0 0 calc(var(--mcui-pixel) * 2) black inset;
+}
+
+.mcui-pressure-plate.mcui-active::after, .mcui-button.mcui-active::after {
+	opacity: 0.2;
+}
+
+.mcui-wall-sign, .mcui-wall-sign::selection {
+	text-shadow: 0 0 calc(0.0625 * var(--mcui-pixel));
+}
