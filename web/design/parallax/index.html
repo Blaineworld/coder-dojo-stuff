@@ -15,7 +15,7 @@
 		radial-gradient(ellipse at center, transparent 69%, darkSlateGray calc(69% + 1px)), /* you're in a cave */
 		radial-gradient(circle at top, transparent 69%, seaGreen calc(69% + 1px)), /* distant mountains */
 		radial-gradient(circle at top, transparent 65%, steelBlue calc(65% + 1px)), /* more distanter mountains */
-		radial-gradient(circle at 15% 15%, yellow 12.5%, transparent 15%); /* big star boi */
+		radial-gradient(circle at 15% 15%, gold 12.5%, transparent 15%); /* big star boi */
 	background-size: 75vw 100vh, 25vw 100vh, 20vw calc(100vh - 2.5%), 100vw 100vh;
 	overflow-y: hidden;
 }
@@ -39,7 +39,7 @@ body {
 		<script>
 'use strict';
 
-addEventListener("scroll", () => parallax(), { "passive": true });
+parallax.initialize();
 		</script>
 	</body>
 </html>

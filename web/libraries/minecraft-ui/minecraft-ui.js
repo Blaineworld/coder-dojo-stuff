@@ -1,6 +1,12 @@
 'use strict';
 
 const MinecraftUI = (function() {
+	const events = {
+		"press": new CustomEvent("press", {}),
+		"release": new CustomEvent("release", {}),
+		"unpress": new CustomEvent("unpress", {})
+	};
+
 	document.head.insertBefore(document.createElement("STYLE"), document.head.querySelector("style")).innerHTML = ":root{--mcui-pixel:1px}.mcui{background-size:calc(16*var(--mcui-pixel));display:inline-block;image-rendering:-moz-crisp-edges;image-rendering:-webkit-crisp-edges;image-rendering:pixelated;image-rendering:crisp-edges;margin:0;padding:0}.mcui-pressure-plate{background-color:silver;background-position:calc(var(--mcui-pixel)*-1) calc(var(--mcui-pixel)*-1);margin:var(--mcui-pixel);width:calc(var(--mcui-pixel)*14);height:calc(var(--mcui-pixel)*14)}.mcui-pressure-plate.mcui-active,.mcui-button.mcui-active{box-shadow: 0 0 calc(var(--mcui-pixel)*2) black inset}.mcui-button{background-color:silver;background-position:calc(var(--mcui-pixel)*-5) calc(var(--mcui-pixel)*-6);margin:calc(var(--mcui-pixel)*6) calc(var(--mcui-pixel)*5);width:calc(var(--mcui-pixel)*6);height:calc(var(--mcui-pixel)*4)}";
 
 	const passive = { "passive": true };
@@ -17,7 +23,7 @@ const MinecraftUI = (function() {
 		"spruce_planks": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA00lEQVQ4y31SMQ7CQAzzT1iYOyEkOrOxISGhbh26MyJGJn5d5JNcuSZlyOUusS6xE7zHfn4Nh5n+M51+7F98vHQzeNEnNAYf1275NPN6E0NDBaR/3o8LSJaftA54DOd9M971vvW7Zsrp7nF6iCMrJM+MORXm+F5RUELe9UiqwsP5eQUJWgnpuiC5pgaZTwx8zl6lmn3q0Trw0WW7OUL30giVutXsM7904ByrPfCc74QMmndqoQrVXjgWWzue7bpWTgkOdIBE2hJ1tQfJzfVwTar9+ALLJfdgEDC7owAAAABJRU5ErkJggg=="
 	};
 
-	const buttonTypes = {
+	const buttonTextures = {
 		"STONE": "stone",
 		"ACACIA": "acacia_planks",
 		"BIRCH": "birch_planks",
@@ -25,7 +31,14 @@ const MinecraftUI = (function() {
 		"JUNGLE": "jungle_planks",
 		"OAK": "oak_planks",
 		"SPRUCE": "spruce_planks"
-	};
+	}, buttonTypes = [ "STONE", "ACACIA", "BIRCH", "DARK_OAK", "JUNGLE", "OAK", "SPRUCE" ], signTextures = {
+		"ACACIA": "acacia_sign",
+		"BIRCH": "birch_sign",
+		"DARK_OAK": "dark_oak_sign",
+		"JUNGLE": "jungle_sign",
+		"OAK": "oak_sign",
+		"SPRUCE": "spruce_sign"
+	}, signTypes = [ "ACACIA", "BIRCH", "DARK_OAK", "JUNGLE", "OAK", "SPRUCE" ];
 
 	function play(sound = "null", volume = 1.0, pitch = 1.0) {
 		// Play a sound.
@@ -34,21 +47,26 @@ const MinecraftUI = (function() {
 	function deactivateElement(E) {
 		// Make an element not active anymore.
 		E.className = E.className.replace("mcui-active", "");
+		E.dispatchEvent(events.unpress);
 	}
 
 	function buttonMouseDown() {
 		// When you click on a button.
 		clearTimeout(this.deactivateTimeout);
-		if (!(" " + this.className + " ").includes(" mcui-active "))
+		if (!(" " + this.className + " ").includes(" mcui-active ")) {
 			this.className += " mcui-active";
+			this.dispatchEvent(events.press);
+		}
 	}
 
 	function buttonMouseEnter(event) {
 		// When your cursor enters a button.
 		clearTimeout(this.deactivateTimeout);
 		if (event.buttons)
-			if ((" " + this.className + " ").includes(" mcui-active "))
+			if ((" " + this.className + " ").includes(" mcui-active ")) {
 				this.className += " mcui-active";
+				this.dispatchEvent(events.press);
+			}
 	}
 
 	function buttonMouseUp() {
@@ -56,19 +74,23 @@ const MinecraftUI = (function() {
 		if ((" " + this.className + " ").includes(" mcui-active ")) {
 			clearTimeout(this.deactivateTimeout);
 			this.deactivateTimeout = setTimeout(deactivateElement, 1000, this);
+			this.dispatchEvent(events.release);
 		}
 	}
 
 	Object.defineProperties(x, {
 		"createButton": {
-			"value": function CREATE_BUTTON(type = "STONE", container) {
+			"value": function CREATE_BUTTON(type = "STONE", container = document.body) {
 				// Create an HTML Minecraft button.
-				const v = String(type).toUpperCase();
-				if (!(v in buttonTypes))
-					throw Error("Unknown button variant: " + v);
+				let v = String(type).toUpperCase();
+				if (!(v in buttonTextures))
+					if (v === "RANDOM")
+						v = buttonTypes[Math.floor(Math.random() * buttonTypes.length)];
+					else
+						throw Error("Unknown button variant: " + v);
 				const e = document.createElement("DIV");
 				e.className = "mcui mcui-button";
-				e.style.backgroundImage = "url('" + textures[buttonTypes[v]] + "')";
+				e.style.backgroundImage = "url('" + textures[buttonTextures[v]] + "')";
 				e.addEventListener("mousedown", buttonMouseDown, passive);
 				e.addEventListener("mouseup", buttonMouseUp, passive);
 				e.addEventListener("mouseenter", buttonMouseEnter, passive);
@@ -79,16 +101,36 @@ const MinecraftUI = (function() {
 			}
 		},
 		"createPressurePlate": {
-			"value": function CREATE_PRESSURE_PLATE(type = "STONE", container) {
+			"value": function CREATE_PRESSURE_PLATE(type = "STONE", container = document.body) {
 				// Create an HTML Minecraft pressure plate.
-				const v = String(type).toUpperCase();
-				if (!(v in buttonTypes))
-					throw Error("Unknown pressure plate variant: " + v);
+				let v = String(type).toUpperCase();
+				if (!(v in buttonTextures))
+					if (v === "RANDOM")
+						v = buttonTypes[Math.floor(Math.random() * buttonTypes.length)];
+					else
+						throw Error("Unknown pressure plate variant: " + v);
 				const e = document.createElement("DIV");
 				e.className = "mcui mcui-pressure-plate";
-				e.style.backgroundImage = "url('" + textures[buttonTypes[v]] + "')";
+				e.style.backgroundImage = "url('" + textures[buttonTextures[v]] + "')";
 				e.addEventListener("mouseenter", buttonMouseDown, passive);
 				e.addEventListener("mouseleave", buttonMouseUp, passive);
+				if (container instanceof Element)
+					container.appendChild(e);
+				return e;
+			}
+		},
+		"createSign": {
+			"value": function CREATE_SIGN(type = "OAK", container = document.body) {
+				// Create an HTML Minecraft sign.
+				let v = String(type).toUpperCase();
+				if (!(v in signTypes))
+					if (v === "RANDOM")
+						v = signTypes[Math.floor(Math.random() * signTypes.length)];
+					else
+						throw Error("Unknown sign variant: " + v);
+				const e = document.createElement("DIV");
+				e.className = "mcui mcui-sign";
+				e.style.backgroundImage = "url('" + textures[signTextures[v]] + "')";
 				if (container instanceof Element)
 					container.appendChild(e);
 				return e;

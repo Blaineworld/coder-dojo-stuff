@@ -1,3 +1,4 @@
-Add a functioning sound system.
-Add custom events for pressing and unpressing buttons and pressure plates, etc. so it will be easier to fully utilize the potential of this library in your webpage.
-Make a browser extension for this library?
+        Add a functioning sound system.
+(DONE!) Add custom events for pressing and unpressing buttons and pressure plates, etc. so it will be easier to fully utilize the potential of this library in your webpage.
+        Finish up signs.
+        Make a browser extension for this library?

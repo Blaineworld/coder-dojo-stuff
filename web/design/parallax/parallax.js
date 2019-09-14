@@ -22,6 +22,20 @@
 		layers = meta.content.split(" ");
 
 	Object.defineProperties(parallax, {
+		"initialize": {
+			"value": element => {
+				if (element instanceof Element)
+					e = element;
+				else
+					if (typeof element === "string")
+						e = document.querySelector(element) || e;
+				addEventListener("scroll", async () => await parallax(), { "passive": true });
+				return e;
+			}
+		},
+		"init": {
+			"get": () => parallax.initialize
+		},
 		"element": {
 			"get": () => e,
 			"set": element => {
@@ -35,6 +49,9 @@
 		"layers": {
 			"get": () => Array.from(layers),
 			"set": depths => layers = Array.from(depths)
+		},
+		"version": {
+			"value": "0.2.0"
 		}
 	});
 
