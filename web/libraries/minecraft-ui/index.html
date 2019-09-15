@@ -12,7 +12,7 @@
 	</head>
 	<body>
 		<h1>MinecraftUI Demo</h1>
-		<p>MinecraftUI brings the world of Minecraft to your browser! It's a Javascript library that brings Minecraft to the web. Does it cause problems for mobile users? Absolutely! But really, who cares as long as it's fun? :)</p>
+		<p>MinecraftUI brings Minecraft to the web, with classic blocks, items, and entities from the game. Does it cause problems for mobile users? Absolutely! But really, who cares as long as it's fun? :)</p>
 		Graphics: <select id="graphics" onchange="localStorage.setItem('graphics',MinecraftUI.graphics=this.value)">
 			<option>Fast</option>
 			<option>Fancy</option>
@@ -30,18 +30,23 @@ try {
 } catch(error) {
 }
 
-const myPressurePlate = MinecraftUI.createPressurePlate("stone");
-myPressurePlate.addEventListener("press", () => console.log("Pressed!"));
-myPressurePlate.addEventListener("release", () => console.log("Released!"));
-myPressurePlate.addEventListener("unpress", () => console.log("Unpressed!"));
+const myPressurePlate = MinecraftUI.createPressurePlate("random");
+myPressurePlate.addEventListener("press", () => console.log("Pressure plate pressed!"));
+myPressurePlate.addEventListener("release", () => console.log("Pressure plate released!"));
+myPressurePlate.addEventListener("unpress", () => console.log("Pressure plate unpressed!"));
 
-const myButton = MinecraftUI.createButton("spruce");
-myButton.addEventListener("press", () => console.log("Pressed!"));
-myButton.addEventListener("release", () => console.log("Released!"));
-myButton.addEventListener("unpress", () => console.log("Unpressed!"));
+const myButton = MinecraftUI.createButton("random");
+myButton.addEventListener("press", () => console.log("Button pressed!"));
+myButton.addEventListener("release", () => console.log("Button released!"));
+myButton.addEventListener("unpress", () => console.log("Button unpressed!"));
 
-const mySign = MinecraftUI.createWallSign("oak");
+const mySign = MinecraftUI.createWallSign("random");
 mySign.innerHTML = "\nI AM A SIGN!";
+
+const myLamp = MinecraftUI.createRedstoneLamp();
+
+const myFrame = MinecraftUI.createItemFrame();
+myFrame.appendChild(document.createElement("img")).src = "https://upload.wikimedia.org/wikipedia/en/4/46/Waluigi.png";
 		</script>
 	</body>
 </html>

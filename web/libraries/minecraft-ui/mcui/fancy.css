@@ -4,12 +4,12 @@
 	by Blaineworld
 */
 
-.mcui-pressure-plate.mcui-active, .mcui-button.mcui-active {
-	box-shadow: 0 0 calc(var(--mcui-pixel) * 2) black inset;
+.mcui-item-frame, .mcui-pressure-plate.mcui-active, .mcui-button.mcui-active {
+	box-shadow: 0 0 calc(2 * var(--mcui-pixel)) var(--mcui-shadow-color) inset;
 }
 
 .mcui-pressure-plate.mcui-active::after, .mcui-button.mcui-active::after {
-	opacity: 0.2;
+	opacity: 0.125;
 }
 
 .mcui-wall-sign, .mcui-wall-sign::selection {

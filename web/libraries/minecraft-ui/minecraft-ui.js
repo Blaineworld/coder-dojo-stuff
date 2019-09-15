@@ -1,7 +1,7 @@
 'use strict';
 
 const MinecraftUI = (function() {
-	let sound = false;
+	let sound = false, graphics = true, graphicsTimeout = -1;
 
 	const events = {
 		"press": new CustomEvent("press", {}),
@@ -47,7 +47,7 @@ const MinecraftUI = (function() {
 	}
 
 	async function setGraphics(setting) {
-		fancyGraphics.disabled = await await String(setting).toUpperCase() !== "FANCY";
+		fancyGraphics.disabled = graphics;
 	}
 
 	async function deactivateElement(E, e) {
@@ -56,10 +56,13 @@ const MinecraftUI = (function() {
 		await E.dispatchEvent(events.unpress);
 		if (e)
 			await play("random/click");
+		delete E.deactivateTimeout;
 	}
 
 	async function buttonMouseDown() {
 		// When you click on a button.
+		if (await (" " + this.className + " ").includes(" mcui-locked "))
+			return;
 		await clearTimeout(this.deactivateTimeout);
 		if (!await (" " + this.className + " ").includes(" mcui-active ")) {
 			this.className += " mcui-active";
@@ -70,6 +73,8 @@ const MinecraftUI = (function() {
 
 	async function buttonMouseEnter(event) {
 		// When your cursor enters a button.
+		if (await (" " + this.className + " ").includes(" mcui-locked "))
+			return;
 		if (event.buttons) {
 			await clearTimeout(this.deactivateTimeout);
 			if (!await (" " + this.className + " ").includes(" mcui-active ")) {
@@ -82,6 +87,8 @@ const MinecraftUI = (function() {
 
 	async function buttonMouseUp() {
 		// When you unclick on a button.
+		if (await (" " + this.className + " ").includes(" mcui-locked "))
+			return;
 		if (await (" " + this.className + " ").includes(" mcui-active ")) {
 			await clearTimeout(this.deactivateTimeout);
 			this.deactivateTimeout = await setTimeout(deactivateElement, 1000, this, "random/click");
@@ -89,8 +96,8 @@ const MinecraftUI = (function() {
 		}
 	}
 
-	const buttonProperties = {
-		"pressed": {
+	const commonProperties = {
+		"active": {
 			"get": function() {
 				return (" " + this.className + " ").includes(" mcui-active ");
 			},
@@ -99,26 +106,75 @@ const MinecraftUI = (function() {
 				this.className = this.className.replace("mcui-active", "");
 				if (state)
 					this.className += " mcui-active";
+			},
+			"enumerable": true
+		},
+		"locked": {
+			"get": function() {
+				return (" " + this.className + " ").includes(" mcui-locked ");
+			},
+			"set": function(state) {
+				clearTimeout(this.deactivateTimeout);
+				this.className = this.className.replace("mcui-locked", "");
+				if (state)
+					this.className += " mcui-locked";
+			},
+			"enumerable": true
+		}
+	}, buttonProperties = {
+		"down": {
+			"get": function() {
+				return this.active;
+			},
+			"set": function(state) {
+				this.active = state;
+			},
+			"enumerable": true
+		},
+		"press": {
+			"value": function() {
+				clearTimeout(this.deactivateTimeout);
+				this.className += " mcui-active";
+				this.deactivateTimeout = setTimeout(deactivateElement, 1000, this, "random/click");
+				this.dispatchEvent(events.press);
+				play("random/click");
+			}
+		}
+	}, redstoneLampProperties = {
+		"lit": {
+			"get": function() {
+				return this.active;
+			},
+			"set": function(state) {
+				this.active = state;
+			},
+			"enumerable": true
+		},
+		"deactivate": {
+			"value": function() {
+				// Yes, it even has the 4-tick delay!
+				clearTimeout(this.deactivateTimeout);
+				this.deactivateTimeout = setTimeout(deactivateElement, 200, this);
 			}
 		}
 	};
 
 	Object.defineProperties(x, {
 		"version": {
-			"value": "alpha-rd",
-			"enumerable": true
+			"enumerable": true,
+			"value": "alpha-rd"
 		},
 		"graphics": {
 			"enumerable": true,
 			"get": function() {
-				if (fancyGraphics.disabled)
+				if (graphics)
 					return "Fast";
 				return "Fancy";
 			},
 			"set": function(setting) {
-				setTimeout(setGraphics, 0, setting);
-				if (document.readyState !== "complete")
-					addEventListener("load", () => setGraphics(setting));
+				graphics = String(setting).toUpperCase() !== "FANCY";
+				if (graphicsTimeout < 0)
+					graphicsTimeout = setTimeout(setGraphics, 1);
 			}
 		},
 		"sound": {
@@ -150,9 +206,22 @@ const MinecraftUI = (function() {
 				e.addEventListener("mouseup", buttonMouseUp, passive);
 				e.addEventListener("mouseenter", buttonMouseEnter, passive);
 				e.addEventListener("mouseleave", buttonMouseUp, passive);
+				Object.defineProperties(e, commonProperties);
+				Object.defineProperties(e, buttonProperties);
 				if (container instanceof Element)
 					container.appendChild(e);
-				Object.defineProperties(e, buttonProperties);
+				return e;
+			}
+		},
+		"createItemFrame": {
+			"value": function CREATE_REDSTONE_LAMP(container = document.body) {
+				// Create an HTML Minecraft sign.
+				const e = document.createElement("DIV");
+				e.className = "mcui mcui-item-frame";
+				Object.defineProperties(e, commonProperties);
+				Object.defineProperties(e, redstoneLampProperties);
+				if (container instanceof Element)
+					container.appendChild(e);
 				return e;
 			}
 		},
@@ -172,9 +241,24 @@ const MinecraftUI = (function() {
 				e.style.backgroundImage = "url('mcui/textures/block/" + v + ".gif')";
 				e.addEventListener("mouseenter", buttonMouseDown, passive);
 				e.addEventListener("mouseleave", buttonMouseUp, passive);
+				Object.defineProperties(e, commonProperties);
+				Object.defineProperties(e, buttonProperties);
 				if (container instanceof Element)
 					container.appendChild(e);
-				Object.defineProperties(e, buttonProperties);
+				return e;
+			}
+		},
+		"createRedstoneLamp": {
+			"value": function CREATE_REDSTONE_LAMP(lit = false, container = document.body) {
+				// Create an HTML Minecraft sign.
+				const e = document.createElement("DIV");
+				e.className = "mcui mcui-redstone-lamp";
+				if (Boolean(lit))
+					e.className += " mcui-active";
+				Object.defineProperties(e, commonProperties);
+				Object.defineProperties(e, redstoneLampProperties);
+				if (container instanceof Element)
+					container.appendChild(e);
 				return e;
 			}
 		},
@@ -189,7 +273,8 @@ const MinecraftUI = (function() {
 						throw Error("Unknown sign variant: " + v);
 				const e = document.createElement("PRE");
 				e.className = "mcui mcui-wall-sign";
-				e.style.backgroundImage = "url('mcui/textures/entity/signs/custom/" + v + ".gif')";
+				e.style.backgroundImage = "url('mcui/textures/entity/signs/wall/" + v + ".gif')";
+				Object.defineProperties(e, commonProperties);
 				if (container instanceof Element)
 					container.appendChild(e);
 				return e;
@@ -197,7 +282,9 @@ const MinecraftUI = (function() {
 		}
 	});
 
-	addEventListener("load", () => fancyGraphics.disabled = true);
+	addEventListener("load", async () => graphicsTimeout = await setTimeout(setGraphics, 10));
+
+	graphicsTimeout = setTimeout(setGraphics, 10);
 
 	return x;
 })();

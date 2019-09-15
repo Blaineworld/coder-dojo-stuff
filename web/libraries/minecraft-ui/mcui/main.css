@@ -7,11 +7,10 @@
 :root{
 	--mcui-pixel: 1px;
 
-	--mcui-shadow: #000104;
+	--mcui-shadow-color: #000104;
 }
 
 .mcui {
-
 	background-size: calc(16 * var(--mcui-pixel));
 
 	display: inline-block;
@@ -21,8 +20,12 @@
 	image-rendering: pixelated;
 	image-rendering: crisp-edges;
 
+	position: relative;
+
 	margin: 0;
 	padding: 0;
+	height: calc(16 * var(--mcui-pixel));
+	width: calc(16 * var(--mcui-pixel));
 
 	vertical-align: text-top;
 
@@ -39,6 +42,53 @@
 	margin: calc(6 * var(--mcui-pixel)) calc(5 * var(--mcui-pixel));
 	height: calc(4 * var(--mcui-pixel));
 	width: calc(6 * var(--mcui-pixel));
+}
+
+.mcui-item-frame {
+	background-color: brown;
+	background-image: url('textures/block/item_frame.gif');
+	background-position: calc(-1 * var(--mcui-pixel)) calc(-1 * var(--mcui-pixel));
+
+	border: var(--mcui-pixel) solid gold;
+
+	color: yellow;
+
+	font-family: cursive;
+
+	width: calc(14 * var(--mcui-pixel));
+	height: calc(14 * var(--mcui-pixel));
+
+	overflow: shown;
+
+	text-align: center;
+}
+
+.mcui-item-frame::after {
+	content: '';
+
+	background-image: url('textures/block/item_frame_border.gif');
+	background-size: calc(16 * var(--mcui-pixel));
+
+	display: block;
+
+	left: calc(-1 * var(--mcui-pixel));
+	top: calc(-1 * var(--mcui-pixel));
+
+	position: absolute;
+
+	width: calc(16 * var(--mcui-pixel));
+	height: calc(16 * var(--mcui-pixel));
+}
+
+.mcui-item-frame > * {
+	margin: auto;
+
+	max-height: 100%;
+	max-width: 100%;
+
+	object-fit: fill;
+
+	vertical-align: middle;
 }
 
 .mcui-pressure-plate {
@@ -59,14 +109,25 @@
 }
 
 .mcui-pressure-plate.mcui-active::after, .mcui-button.mcui-active::after {
-	background: var(--mcui-shadow);
+	background: var(--mcui-shadow-color);
 
 	display: block;
 
-	opacity: 0.5;
+	opacity: 0.4;
+}
+
+.mcui-redstone-lamp {
+	background-color: brown;
+	background-image: url('textures/block/redstone_lamp.gif');
+}
+
+.mcui-redstone-lamp.mcui-active {
+	background-color: papayaWhip;
+	background-image: url('textures/block/redstone_lamp_on.gif');
 }
 
 .mcui-wall-sign {
+	background-color: gold;
 	background-size: calc(16 * var(--mcui-pixel)) calc(8 * var(--mcui-pixel));
 
 	font-family: sans-serif;
@@ -90,6 +151,6 @@
 }
 
 .mcui-wall-sign::selection {
-	background: #0000ff;
+	background-color: #0000ff;
 	color: white;
 }
